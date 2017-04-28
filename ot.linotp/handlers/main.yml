@@ -1,0 +1,18 @@
+---
+# handlers file for ot.linotp
+- name: restart apache2
+  become: yes
+  service:
+    name: "{{ linotp_service_name }}"
+    state: restarted
+  tags:
+    - linotp 
+
+- name: reload apache2
+  become: yes
+  service:
+    name: "{{ linotp_service_name }}"
+    state: reloaded
+  tags:
+    - linotp
+

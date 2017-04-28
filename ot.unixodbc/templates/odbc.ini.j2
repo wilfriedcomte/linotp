@@ -1,0 +1,12 @@
+# -*- text -*-
+# {{ ansible_managed }}
+[linotp]
+Driver = FreeTDS
+Description = SQL cluster
+Trace = No
+ServerName = mssql
+Port = 1433
+Database = linotp
+#TDS_Version = 4.2
+ClientCharset=UTF-8
+tds_version = 7.0

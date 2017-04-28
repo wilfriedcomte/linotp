@@ -1,0 +1,6 @@
+---
+# vars file for freeradius (Ubuntu specific)
+
+linotp_packages:
+- linotp
+linotp_service_name: apache2        

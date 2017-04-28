@@ -1,0 +1,6 @@
+---
+# vars file for ot.linotp
+#- hosts: Ubuntu2
+##  sudo: no
+#  roles:
+#- { role: "ot.linotp", packer_version: "2.9.0.1" }

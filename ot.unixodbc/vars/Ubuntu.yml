@@ -1,0 +1,14 @@
+---
+# vars file for freeradius (Ubuntu specific)
+#
+unixodbc_packages:
+  - unixodbc 
+  - unixodbc-dev
+  - unixodbc
+freetds_packages:
+  - freetds-common
+  - tdsodbc
+  - freetds-bin
+  - freetds-dev
+pyodbc_packages:
+  - python-pyodbc 

@@ -1,0 +1,20 @@
+---
+# tasks file for linotp (Ubuntu specifc)
+#
+
+- name: install linopt repository
+  apt_repository: repo='ppa:linotp/stable'
+
+- name: Install linotp packages
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - "{{ linotp_packages }}"
+  tags:
+    - linotp
+
+
+

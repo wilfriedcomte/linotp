@@ -1,0 +1,211 @@
+---
+# tasks file for ot.linotp
+- name: Include distribution specific variables
+  include_vars: "{{ ansible_distribution }}.yml"
+  tags:
+    - linotp
+
+- include: CentOS.yml
+  when: ansible_distribution == "CentOS"
+  tags:
+    - linotp
+
+- include: Ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+  tags:
+    - linotp
+
+- name: Change linotp.ini configuration file
+  become: yes
+  copy:
+    src: linotp.ini.j2
+    dest: /etc/linotp2/linotp.ini
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload apache2
+  tags:
+    - linotp 
+
+- name: Change rlm_perl.ini configuration file
+  become: yes
+  template:
+    src: rlm_perl.ini.j2
+    dest: /etc/linotp2/rlm_perl.ini
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload apache2
+  tags:
+    - linotp
+
+- name: Replace EncKey file
+  become: yes
+  copy:
+    src: encKey.j2
+    dest: /etc/linotp2/encKey
+    owner: linotp
+    group: root
+    mode: 0400
+  notify:
+    - reload apache2
+  tags:
+    - linotp
+
+# copy certificate otp.oberthur.com
+- name: copy cert key file
+  become: yes
+  copy:
+    src: otp-cert-20161024.key.j2
+    dest: /etc/ssl/private/otp-cert-20161024.key
+    owner: root
+    group: ssl-cert
+    mode: 0640
+  notify:
+    - reload apache2
+  tags:
+    - linotp
+
+- name: copy cert pub file
+  become: yes
+  copy:
+    src: otp-cert-20161024.crt.j2
+    dest: /etc/ssl/certs/otp-cert-20161024.crt
+    owner: root
+    group: ssl-cert
+    mode: 0640
+  notify:
+    - reload apache2
+  tags:
+    - linotp
+
+- name: Replace apache linotp file
+  become: yes
+  copy:
+    src: linotp2.conf.j2
+    dest: /etc/apache2/sites-available/linotp2.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload apache2
+  tags:
+    - linotp
+
+# Custom interface
+- name: Replace favicon file
+  become: yes
+  copy:
+    src: favicon.ico.j2
+    dest: /usr/share/pyshared/linotp/public/favicon.ico
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload apache2
+  tags:
+    - linotp
+
+- name: change logo file
+  become: yes
+  copy:
+    src: OTLogo.png.j2
+    dest: /usr/share/pyshared/linotp/public/images/OTLogo.png
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload apache2
+  tags:
+    - linotp
+
+- name: symlink logo file
+  file:
+    src: /usr/share/pyshared/linotp/public/images/OTLogo.png
+    dest: /usr/lib/pymodules/python2.7/linotp/public/images/OTLogo.png
+    state: link
+  notify:
+    - reload apache2
+  tags:
+    - linotp
+
+- name: create custom-style file in manage
+  become: yes
+  copy:
+    src: css-ot/manage/custom-style.css.j2
+    dest: /usr/share/pyshared/linotp/public/manage/custom-style.css
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload apache2
+  tags:
+    - linotp
+
+- name: symlink custom-style file in manage
+  file:
+    src: /usr/share/pyshared/linotp/public/manage/custom-style.css
+    dest: /usr/lib/pymodules/python2.7/linotp/public/manage/custom-style.css
+    state: link
+  notify:
+    - reload apache2
+  tags:
+    - linotp
+
+- name: create custom-style file in selfservice
+  become: yes
+  copy:
+    src: css-ot/selfservice/custom-style.css.j2
+    dest: /usr/share/pyshared/linotp/public/selfservice/custom-style.css
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload apache2
+  tags:
+    - linotp
+
+- name: symlink custom-style file in selfservice
+  file:
+    src: /usr/share/pyshared/linotp/public/selfservice/custom-style.css
+    dest: /usr/lib/pymodules/python2.7/linotp/public/selfservice/custom-style.css
+    state: link
+  notify:
+    - reload apache2
+  tags:
+    - linotp
+
+- name: create custom-style file in openid
+  become: yes
+  copy:
+    src: css-ot/openid/custom-style.css.j2
+    dest: /usr/share/pyshared/linotp/public/openid/custom-style.css
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload apache2
+  tags:
+    - linotp
+
+- name: symlink custom-style file in openid
+  file:
+    src: /usr/share/pyshared/linotp/public/openid/custom-style.css
+    dest: /usr/lib/pymodules/python2.7/linotp/public/openid/custom-style.css
+    state: link
+  notify:
+    - reload apache2
+  tags:
+    - linotp
+
+- name: clean directory data
+  file: 
+    path: /etc/linotp2/data/templates
+    state: absent
+  notify:
+    - reload apache2
+  tags:
+    - linotp
+

@@ -1,0 +1,34 @@
+---
+# tasks file for freeradius (Ubuntu specifc)
+- name: Install unixODBC  packages
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - "{{ unixodbc_packages }}"
+  tags:
+    - unixodbc
+
+- name: Install python-pyodbc packages
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - "{{ pyodbc_packages }}"
+  tags:
+    - unixodbc
+
+- name: Install freetds packages
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - "{{ freetds_packages }}"
+  tags:
+    - unixodbc

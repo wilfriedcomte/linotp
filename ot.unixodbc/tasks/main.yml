@@ -1,0 +1,57 @@
+---
+# tasks file for ot.unixodbc
+
+- name: Include distribution specific variables
+  include_vars: "{{ ansible_distribution }}.yml"
+  tags:
+    - unixodbc
+
+- include: CentOS.yml
+  when: ansible_distribution == "CentOS"
+  tags:
+    - unixodbc
+
+- include: Ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+  tags:
+    - unixodbc
+
+- name: Change freetds configuration file
+  become: yes
+  template:
+    src: freetds.conf.j2
+    dest: /etc/freetds/freetds.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload apache2
+  tags:
+    - unixodbc
+
+- name: Change odbc configuration file
+  become: yes
+  template:
+    src: odbc.ini.j2
+    dest: /etc/odbc.ini
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload apache2
+  tags:
+    - unixodbc
+
+- name: Change odbcinst configuration file
+  become: yes
+  template:
+    src: odbcinst.ini.j2
+    dest: /etc/odbcinst.ini
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload apache2
+  tags:
+    - unixodbc
+
